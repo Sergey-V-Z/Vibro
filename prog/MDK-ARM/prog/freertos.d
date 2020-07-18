@@ -49,3 +49,4 @@ prog\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 prog\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 prog\freertos.o: ..\Middlewares\FreeModbus\modbus\include\mbport.h
 prog\freertos.o: ..\Middlewares\FreeModbus\modbus\include\mbproto.h
+prog\freertos.o: ../Inc/DescriptMotorControl.h

@@ -28,6 +28,7 @@
 /* USER CODE BEGIN Includes */     
 #include "mb.h"
 #include "mbport.h"
+#include "DescriptMotorControl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +48,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+extern TIM_HandleTypeDef htim3;
+									//Status,	CMD,	Mode,				time_mS,	Start_time_mS,	Port,								Pin
+motor_t Out[4] = {{Off,			Off,	On_Off,			0,				0,							DIN_CH1_GPIO_Port,	DIN_CH1_Pin},
+									{Off,			Off,	On_Off,			0,				0,							DIN_CH2_GPIO_Port,	DIN_CH2_Pin},
+									{Off,			Off,	On_Off,			0,				0,							DIN_CH3_GPIO_Port,	DIN_CH3_Pin},
+									{Off,			Off,	On_Off,			0,				0,							DIN_CH4_GPIO_Port,	DIN_CH4_Pin}};
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
@@ -123,9 +130,13 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+  eMBErrorCode eStatus = eMBInit( MB_RTU, 01, 3, 115200, MB_PAR_NONE );
+  eStatus = eMBEnable();
+	HAL_TIM_Base_Start_IT(&htim3);
   /* Infinite loop */
   for(;;)
   {
+    eStatus = eMBPoll();		
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
@@ -133,12 +144,36 @@ void StartDefaultTask(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+// В этой функции производится обнуление таймера для синхронизации с сетью и выключение симисторов
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	TIM3->CNT = 0;
   __disable_irq ();
   
-  
+	for(int i=0;i < 4; i++)
+  {
+		if((Out[i].Mode == DIM) |((Out[i].Mode == On_Off) & (Out[i].CMD == Off)))
+			{
+				HAL_GPIO_WritePin(Out[i].Port, Out[i].Pin, GPIO_PIN_RESET);
+				Out[i].time = 0;
+			}
+  }
   __enable_irq ();
+}
+
+// В этой функции тикают таймеры и вклюваются симисторы
+void time_1mS()
+{
+	__disable_irq ();
+	for(int i=0;i<4;i++)
+  {
+		Out[i].time++;
+		if(Out[i].time >= Out[i].timeToOff)
+		{
+			HAL_GPIO_WritePin(Out[i].Port, Out[i].Pin, GPIO_PIN_SET);
+		}
+  }
+	__enable_irq ();
 }
 /*description https://www.freemodbus.org/api/group__modbus__registers.html*/
 //0x04

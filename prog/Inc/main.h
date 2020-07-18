@@ -54,12 +54,26 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void time_1mS(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 #define RS485_1_Rs_Pin GPIO_PIN_1
 #define RS485_1_Rs_GPIO_Port GPIOA
+#define DIN_CH3_Pin GPIO_PIN_0
+#define DIN_CH3_GPIO_Port GPIOB
+#define DIN_CH4_Pin GPIO_PIN_1
+#define DIN_CH4_GPIO_Port GPIOB
+#define B_Pin GPIO_PIN_12
+#define B_GPIO_Port GPIOB
+#define G_Pin GPIO_PIN_13
+#define G_GPIO_Port GPIOB
+#define R_Pin GPIO_PIN_14
+#define R_GPIO_Port GPIOB
+#define DIN_CH1_Pin GPIO_PIN_4
+#define DIN_CH1_GPIO_Port GPIOB
+#define DIN_CH2_Pin GPIO_PIN_5
+#define DIN_CH2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
