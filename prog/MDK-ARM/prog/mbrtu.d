@@ -31,6 +31,7 @@ prog\mbrtu.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 prog\mbrtu.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 prog\mbrtu.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 prog\mbrtu.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+prog\mbrtu.o: ../Inc/DescriptMotorControl.h
 prog\mbrtu.o: ..\Middlewares\FreeModbus\modbus\include\mbconfig.h
 prog\mbrtu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 prog\mbrtu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h

@@ -29,6 +29,7 @@ prog\porttimer.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 prog\porttimer.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 prog\porttimer.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 prog\porttimer.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+prog\porttimer.o: ../Inc/DescriptMotorControl.h
 prog\porttimer.o: ..\Middlewares\FreeModbus\modbus\include\mbconfig.h
 prog\porttimer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 prog\porttimer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h

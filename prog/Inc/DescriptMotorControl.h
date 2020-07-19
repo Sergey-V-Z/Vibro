@@ -20,6 +20,7 @@
                     
 #define CCW_SET     HAL_GPIO_WritePin(START_GPIO_Port, START_Pin, GPIO_PIN_SET);
                     //HAL_GPIO_WritePin(CCW2_GPIO_Port, CCW2_Pin, GPIO_PIN_SET);
+										
 
 typedef enum 
 {
@@ -39,8 +40,10 @@ typedef struct
   move Status;
   move CMD;
 	mode Mode;
-  uint32_t timeToOff;
+  uint32_t timeToOn;
 	uint32_t time;
 	GPIO_TypeDef *Port;
 	uint16_t Pin;
 }motor_t;
+
+

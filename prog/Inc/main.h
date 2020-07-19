@@ -32,11 +32,29 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "DescriptMotorControl.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+typedef struct 
+{
+	uint32_t Ch1;
+	uint32_t Ch1_DIM;
+		
+	uint32_t Ch2;
+	uint32_t Ch2_DIM;
+	
+	uint32_t Ch3;
+	uint32_t Ch3_DIM;
+	
+	uint32_t Ch4;
+	uint32_t Ch4_DIM;
+	
+	uint32_t BaudRate;
+	uint32_t SlaveAddress;
+
+}settings_t;
 
 /* USER CODE END ET */
 
@@ -55,6 +73,20 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 void time_1mS(void);
+
+//uint32_t flash_read(uint32_t address);
+void flash_write(uint32_t address,uint32_t data);
+//void flash_write_d(uint32_t address,double *data);
+//double flash_read_d(uint32_t address);
+void Flash_ReadParams(settings_t *params, uint32_t source_adr);
+void FLASH_WriteSettings(settings_t params, uint32_t pageAdr);
+
+
+void flash_lock(void);
+void flash_unlock(void);
+void flash_erase_page(uint32_t address);
+uint8_t flash_ready(void);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -75,6 +107,9 @@ void time_1mS(void);
 #define DIN_CH2_Pin GPIO_PIN_5
 #define DIN_CH2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+
+// адреса для сохранения во flash
+#define StartSettingsAddres 0x0803fc00
 
 /* USER CODE END Private defines */
 

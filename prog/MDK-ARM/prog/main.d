@@ -28,6 +28,7 @@ prog\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 prog\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 prog\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 prog\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+prog\main.o: ../Inc/DescriptMotorControl.h
 prog\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 prog\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 prog\main.o: ../Inc/FreeRTOSConfig.h

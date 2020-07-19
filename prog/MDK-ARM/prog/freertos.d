@@ -37,6 +37,7 @@ prog\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 prog\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 prog\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 prog\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+prog\freertos.o: ../Inc/DescriptMotorControl.h
 prog\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 prog\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 prog\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
@@ -49,4 +50,3 @@ prog\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 prog\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 prog\freertos.o: ..\Middlewares\FreeModbus\modbus\include\mbport.h
 prog\freertos.o: ..\Middlewares\FreeModbus\modbus\include\mbproto.h
-prog\freertos.o: ../Inc/DescriptMotorControl.h

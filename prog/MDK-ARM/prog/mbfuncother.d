@@ -31,6 +31,7 @@ prog\mbfuncother.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 prog\mbfuncother.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 prog\mbfuncother.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 prog\mbfuncother.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+prog\mbfuncother.o: ../Inc/DescriptMotorControl.h
 prog\mbfuncother.o: ..\Middlewares\FreeModbus\modbus\include\mbconfig.h
 prog\mbfuncother.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 prog\mbfuncother.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
