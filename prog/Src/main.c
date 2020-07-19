@@ -100,10 +100,19 @@ int main(void)
 	Flash_ReadParams(&Settings, StartSettingsAddres);
 
 // если настройки пусты
-	if(Settings.BaudRate == 0)
+	if((Settings.BaudRate == 0) | (Settings.BaudRate == 0xFFFFFFFF))
 	{
+		Settings.Ch1 = 0;
+		Settings.Ch1_DIM = 0;
+		Settings.Ch2 = 0;
+		Settings.Ch2_DIM = 0;
+		Settings.Ch3 = 0;
+		Settings.Ch3_DIM = 0;
+		Settings.Ch4 = 0;
+		Settings.Ch4_DIM = 0;
 		Settings.BaudRate = 115200;
 		Settings.SlaveAddress = 0x0C;
+		FLASH_WriteSettings(Settings, StartSettingsAddres);
 	}
   /* USER CODE END 2 */
 
@@ -169,7 +178,7 @@ void FLASH_WriteSettings(settings_t params, uint32_t pageAdr) {
 
 	// Опеределим, сколько блоков памяти у нас определено под параметры
 	// Это необходимо для определения количества циклов чтения/записи параметров
-	uint32_t PARAMS_WORD_CNT =	sizeof(params) / sizeof(uint32_t); // Расчитывается исходя из размера структуры в памяти МК деленного на размер блока (4 байта)
+	uint32_t PARAMS_WORD_CNT =	sizeof(settings_t) / sizeof(uint32_t); // Расчитывается исходя из размера структуры в памяти МК деленного на размер блока (4 байта)
 
 	uint32_t *source_adr = (void *)&params;
 
@@ -183,12 +192,14 @@ void FLASH_WriteSettings(settings_t params, uint32_t pageAdr) {
 	flash_lock();                                                                   // Заблокируем Flash
 
 }
-void Flash_ReadParams(settings_t *params, uint32_t source_adr) {
+void Flash_ReadParams(settings_t *params, uint32_t adr) {
 
-	uint32_t *dest_adr = (void *)&params;                                           // Определяем адрес, куда будем писать
+	uint32_t *dest_adr = (void *)params; 
+	uint32_t *source_adr = (uint32_t *)adr;
+	// Определяем адрес, куда будем писать
 	// Опеределим, сколько блоков памяти у нас определено под параметры
 	// Это необходимо для определения количества циклов чтения/записи параметров
-	uint32_t PARAMS_WORD_CNT =	sizeof(params) / sizeof(uint32_t); // Расчитывается исходя из размера структуры в памяти МК деленного на размер блока (4 байта)
+	uint32_t PARAMS_WORD_CNT =	sizeof(settings_t) / sizeof(uint32_t); // Расчитывается исходя из размера структуры в памяти МК деленного на размер блока (4 байта)
 
 	for (uint16_t i=0; i < PARAMS_WORD_CNT; ++i) {                                  // В цикле производим чтение
 		*(dest_adr + i) = *(__IO uint32_t*)(source_adr + i);                    // Само чтение
