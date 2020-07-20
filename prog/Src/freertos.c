@@ -52,17 +52,18 @@ extern settings_t Settings;
 
 extern TIM_HandleTypeDef htim3;
 
-									//Status,	CMD,	Mode,				time_mS,	Start_time_mS,	Port,								Pin
-motor_t Out[4] = {{Off,			Off,	On_Off,			0,				0,							DIN_CH1_GPIO_Port,	DIN_CH1_Pin},
-									{Off,			Off,	On_Off,			0,				0,							DIN_CH2_GPIO_Port,	DIN_CH2_Pin},
-									{Off,			Off,	On_Off,			0,				0,							DIN_CH3_GPIO_Port,	DIN_CH3_Pin},
-									{Off,			Off,	On_Off,			0,				0,							DIN_CH4_GPIO_Port,	DIN_CH4_Pin}};
+									//Status,	CMD,	Mode,				time_mS,	Start_time_mS
+motor_t Out[4] = {{Off,			Off,	On_Off,			0,				0},
+									{Off,			Off,	On_Off,			0,				0},
+									{Off,			Off,	On_Off,			0,				0},
+									{Off,			Off,	On_Off,			0,				0}};
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+double map(double x, double in_min, double in_max, double out_min, double out_max);
    
 /* USER CODE END FunctionPrototypes */
 
@@ -134,7 +135,7 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
 	
-  eMBErrorCode eStatus = eMBInit( MB_RTU, 01, 3, 115200, MB_PAR_NONE );
+  eMBErrorCode eStatus = eMBInit( MB_RTU, Settings.SlaveAddress, 3, Settings.BaudRate, MB_PAR_NONE );
   eStatus = eMBEnable();
 	HAL_TIM_Base_Start_IT(&htim3);
   /* Infinite loop */
@@ -151,42 +152,18 @@ void StartDefaultTask(void const * argument)
 // В этой функции производится обнуление таймера для синхронизации с сетью и выключение симисторов
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	TIM3->CNT = 0;
+
   __disable_irq ();
   
-	for(int i=0;i < 4; i++)
-  {
-		// Если режим димирования выключаем симистор или если режим ключа и каманда выключить то выключаем симистор 
-		if((Out[i].Mode == DIM) |((Out[i].Mode == On_Off) & (Out[i].CMD == Off)))
-			{
-				HAL_GPIO_WritePin(Out[i].Port, Out[i].Pin, GPIO_PIN_RESET);
-				Out[i].time = 0;
-			}
-  }
+        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+	
   __enable_irq ();
 }
 
-//(прерывание от таймера 1мС) В этой функции тикают таймеры и вклюваются симисторы
-void time_1mS()
-{
-	__disable_irq ();
-	for(int i=0;i<4;i++)
-  {
-		if (Out[i].Mode == DIM)
-			{
-				Out[i].time++;
-				if(Out[i].time >= Out[i].timeToOn)
-					{
-						HAL_GPIO_WritePin(Out[i].Port, Out[i].Pin, GPIO_PIN_SET);
-					}
-			}
-		else if ((Out[i].Mode == On_Off )&(Out[i].CMD == On))
-			{
-				HAL_GPIO_WritePin(Out[i].Port, Out[i].Pin, GPIO_PIN_SET);
-			}
-  }
-	__enable_irq ();
-}
+
 /*description https://www.freemodbus.org/api/group__modbus__registers.html*/
 //0x04
 eMBErrorCode
@@ -247,43 +224,159 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
         //переключатель по адресам регистра
         switch (usAddress)
         {
-          case 0:
+          case 0: // канал CH1 режим
           {	
             // команды для отправки на мотор
             switch (*(pucRegBuffer+1))
             {
               case 0:
               {	
-
+								Out[0].Mode = On_Off;
                 break;
               }
               case 1:
               {	
-
+								Out[0].Mode = DIM;
                 break;
               }
-              case 2:
+							default:
               {	
-
-                break;
-              }
-              case 3:
-              {	
-
-                break;
-              }
-              default:
-              {	
-
+								Out[0].Mode = On_Off;
                 break;
               }
             }
             break;
           }
-          case 1:
+          case 1: // канал CH1 процент димирования
           {	
+						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
+						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, dimTik);
             break;
           }
+					case 2: // канал CH2 режим
+          {	
+            // команды для отправки на мотор
+            switch (*(pucRegBuffer+1))
+            {
+              case 0:
+              {	
+								Out[1].Mode = On_Off;
+                break;
+              }
+              case 1:
+              {	
+								Out[1].Mode = DIM;
+                break;
+              }
+							default:
+              {	
+								Out[1].Mode = On_Off;
+                break;
+              }
+            }
+            break;
+          }
+          case 3: // канал CH2 процент димирования
+          {	
+						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
+						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, dimTik);
+            break;
+          }
+					case 4: // канал CH3 режим
+          {	
+            // команды для отправки на мотор
+            switch (*(pucRegBuffer+1))
+            {
+              case 0:
+              {	
+								Out[2].Mode = On_Off;
+                break;
+              }
+              case 1:
+              {	
+								Out[2].Mode = DIM;
+                break;
+              }
+							default:
+              {	
+								Out[2].Mode = On_Off;
+                break;
+              }
+            }
+            break;
+          }
+          case 5: // канал CH3 процент димирования
+          {	
+						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
+						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, dimTik);
+            break;
+          }
+					case 6: // канал CH4 режим
+          {	
+            // команды для отправки на мотор
+            switch (*(pucRegBuffer+1))
+            {
+              case 0:
+              {	
+								Out[3].Mode = On_Off;
+                break;
+              }
+              case 1:
+              {	
+								Out[3].Mode = DIM;
+                break;
+              }
+							default:
+              {	
+								Out[3].Mode = On_Off;
+                break;
+              }
+            }
+            break;
+          }
+          case 7: // канал CH4 процент димирования
+          {	
+						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
+						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, dimTik);
+            break;
+          }
+//          case 8: 
+//          {	
+//            break;
+//          }
+//          case 9: 
+//          {	
+//            break;
+//          }
+//          case 10: 
+//          {	
+//            break;
+//          }
+//          case 11: 
+//          {	
+//            break;
+//          }
+//          case 12: 
+//          {	
+//            break;
+//          }
+//          case 13: 
+//          {	
+//            break;
+//          }
+//          case 14: 
+//          {	
+//            break;
+//          }
+//          case 15: 
+//          {	
+//            break;
+//          }
+//          case 16: 
+//          {	
+//            break;
+//          }
+
           default:
           {	
             eStatus = MB_ENOREG;
@@ -321,6 +414,12 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 
     return MB_ENOREG;
 }  
+
+double map(double x, double in_min, double in_max, double out_min, double out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -42,8 +42,8 @@ typedef struct
 	mode Mode;
   uint32_t timeToOn;
 	uint32_t time;
-	GPIO_TypeDef *Port;
-	uint16_t Pin;
+	//GPIO_TypeDef *Port;
+	uint8_t Pin;
 }motor_t;
 
 
