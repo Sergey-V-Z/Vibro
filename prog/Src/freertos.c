@@ -224,134 +224,65 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
         //переключатель по адресам регистра
         switch (usAddress)
         {
-          case 0: // канал CH1 режим
-          {	
-            // команды для отправки на мотор
-            switch (*(pucRegBuffer+1))
-            {
-              case 0:
-              {	
-								Out[0].Mode = On_Off;
-                break;
-              }
-              case 1:
-              {	
-								Out[0].Mode = DIM;
-                break;
-              }
-							default:
-              {	
-								Out[0].Mode = On_Off;
-                break;
-              }
-            }
-            break;
-          }
-          case 1: // канал CH1 процент димирования
+          case 0: // канал CH1
           {	
 						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
 						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, dimTik);
+
             break;
           }
-					case 2: // канал CH2 режим
-          {	
-            // команды для отправки на мотор
-            switch (*(pucRegBuffer+1))
-            {
-              case 0:
-              {	
-								Out[1].Mode = On_Off;
-                break;
-              }
-              case 1:
-              {	
-								Out[1].Mode = DIM;
-                break;
-              }
-							default:
-              {	
-								Out[1].Mode = On_Off;
-                break;
-              }
-            }
-            break;
-          }
-          case 3: // канал CH2 процент димирования
+          case 1: // канал CH2
           {	
 						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
 						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, dimTik);
+
             break;
           }
-					case 4: // канал CH3 режим
-          {	
-            // команды для отправки на мотор
-            switch (*(pucRegBuffer+1))
-            {
-              case 0:
-              {	
-								Out[2].Mode = On_Off;
-                break;
-              }
-              case 1:
-              {	
-								Out[2].Mode = DIM;
-                break;
-              }
-							default:
-              {	
-								Out[2].Mode = On_Off;
-                break;
-              }
-            }
-            break;
-          }
-          case 5: // канал CH3 процент димирования
+					case 2: // канал CH3 
           {	
 						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
 						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, dimTik);
             break;
           }
-					case 6: // канал CH4 режим
-          {	
-            // команды для отправки на мотор
-            switch (*(pucRegBuffer+1))
-            {
-              case 0:
-              {	
-								Out[3].Mode = On_Off;
-                break;
-              }
-              case 1:
-              {	
-								Out[3].Mode = DIM;
-                break;
-              }
-							default:
-              {	
-								Out[3].Mode = On_Off;
-                break;
-              }
-            }
-            break;
-          }
-          case 7: // канал CH4 процент димирования
+          case 3: // канал CH4 
           {	
 						uint32_t dimTik = (uint32_t)map(*(pucRegBuffer+1), 0x00, 0x64, 9000, 0);
 						__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, dimTik);
             break;
           }
-//          case 8: 
-//          {	
-//            break;
-//          }
-//          case 9: 
-//          {	
-//            break;
-//          }
-//          case 10: 
-//          {	
-//            break;
-//          }
+					case 4: // 
+          {	
+
+            break;
+          }
+          case 5: // 
+          {	
+            break;
+          }
+					case 6: // 
+          {	
+
+            break;
+          }
+          case 7: // 
+          {	
+            break;
+          }
+          case 8: 
+          {	
+						FLASH_WriteSettings(Settings, StartSettingsAddres);
+            break;
+          }
+          case 9: 
+          {	
+						Settings.BaudRate = ((*(pucRegBuffer)<<8) | (*(pucRegBuffer+1)))*10;
+            break;
+          }
+          case 10: 
+          {	
+						Settings.SlaveAddress = *(pucRegBuffer+1);
+            break;
+          }
 //          case 11: 
 //          {	
 //            break;

@@ -98,7 +98,12 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	Flash_ReadParams(&Settings, StartSettingsAddres);
-
+	
+	// предварительно выключаем каналы
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 9000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 9000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 9000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 9000);
 // если настройки пусты
 	if((Settings.BaudRate == 0) | (Settings.BaudRate == 0xFFFFFFFF))
 	{
