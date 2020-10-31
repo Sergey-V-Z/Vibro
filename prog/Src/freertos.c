@@ -49,7 +49,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 extern settings_t Settings;
-
+extern uint16_t half;
 extern TIM_HandleTypeDef htim3;
 
 									//Status,	CMD,	Mode,				time_mS,	Start_time_mS
@@ -152,15 +152,29 @@ void StartDefaultTask(void const * argument)
 // В этой функции производится обнуление таймера для синхронизации с сетью и выключение симисторов
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	if(half == 1){
+		
+		if(GPIO_Pin == Pos_Pin){
+				__disable_irq ();
+			
+						HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+						HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+						HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+						HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+			
+			__enable_irq ();
+		}
+	}else{
+		__disable_irq ();
+		
+					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+					HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+		
+		__enable_irq ();
+	}
 
-  __disable_irq ();
-  
-        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	
-  __enable_irq ();
 }
 
 

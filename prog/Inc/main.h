@@ -98,6 +98,12 @@ uint8_t flash_ready(void);
 #define G_GPIO_Port GPIOB
 #define R_Pin GPIO_PIN_14
 #define R_GPIO_Port GPIOB
+#define Pos_Pin GPIO_PIN_6
+#define Pos_GPIO_Port GPIOC
+#define Pos_EXTI_IRQn EXTI9_5_IRQn
+#define Neg_Pin GPIO_PIN_3
+#define Neg_GPIO_Port GPIOB
+#define Neg_EXTI_IRQn EXTI3_IRQn
 /* USER CODE BEGIN Private defines */
 
 // адреса для сохранения во flash

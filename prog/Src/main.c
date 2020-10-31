@@ -49,7 +49,7 @@
 
 /* USER CODE BEGIN PV */
 settings_t Settings;
-
+uint16_t half = 1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
